@@ -20,16 +20,16 @@ This service is already deployed and running on **Render.com**.
 You can directly test the live API without building anything locally:
 
 **Base URL:**  
-👉 https://simple-banking-system.onrender.com
+👉 [https://simple-banking-system-jh5f.onrender.com](https://simple-banking-system-jh5f.onrender.com)
 
 **Example endpoints:**
 ```bash
 # Health check
-curl https://simple-banking-system.onrender.com/health
+curl https://simple-banking-system-jh5f.onrender.com/health
 # → "ok"
 
 # List accounts
-curl https://simple-banking-system.onrender.com/accounts
+curl https://simple-banking-system-jh5f/accounts
 ```
 (Deployed from Docker Hub image built on Go 1.25, linux/amd64)
 
