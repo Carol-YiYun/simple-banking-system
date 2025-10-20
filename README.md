@@ -20,21 +20,13 @@ Implements a simple banking system that supports:
 
 
 | Feature | Description |
-
 |----------|--------------|
-
 | 🧾 Create Account | Create an account with name and balance (cannot be negative) |
-
 | 💰 Deposit & Withdraw | Update balance safely with validation |
-
 | 🔁 Transfer | Transfer money atomically between accounts |
-
 | 📜 Transaction Logs | Records date/time, amount, direction, and counterparty |
-
 | 🧩 Atomicity | Prevents race conditions in concurrent transactions |
-
 | ✅ Full Testing | Includes unit & integration tests |
-
 | 🐳 Docker | Run the whole service in a container |
 
 ---
