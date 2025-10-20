@@ -32,27 +32,18 @@ Implements a simple banking system that supports:
 ---
 
 ## 🧱 Project Structure
-
+```
 Q2/
-
 ├── cmd/
-
 │ └── server/ # Entry point (main.go)
-
 ├── internal/
-
 │ ├── bank/ # Core business logic
-
 │ ├── server/ # RESTful API layer
-
 │ └── storage/ # JSON snapshot persistence
-
 ├── Dockerfile
-
 ├── go.mod / go.sum
-
 └── README.md
-
+```
 
 ---
 
