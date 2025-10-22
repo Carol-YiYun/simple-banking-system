@@ -67,8 +67,11 @@ SIMPLE-BANKING-SYSTEM/
 ## ⚙️ Quick Run
 
 You can verify the project in 3 ways:
+
 1️⃣ Online via **Render.com**
+
 2️⃣ Using the prebuilt **Docker image**
+
 3️⃣ Running **locally** with Go
 
 ### 🌐 Option A. Test Online (Render.com)
