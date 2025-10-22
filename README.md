@@ -14,31 +14,27 @@ A lightweight **RESTful Banking API** built with Go, featuring:
   
 ---
 
-## 🚀 Live Demo (Deployed on Render)
+## 🌐 Live Demo (Deployed on Render)
 
-This service is already deployed and running on **Render.com**.  
-You can directly test the live API without building anything locally:
+This service is live on **Render.com** — no setup needed.
 
 **Base URL:**  
 👉 https://simple-banking-system-jh5f.onrender.com
 
-**Example endpoints:**
+**Quick Test:**
 ```bash
 # Health check
 curl https://simple-banking-system-jh5f.onrender.com/health
-# → "ok"
-
-# List accounts
-curl https://simple-banking-system-jh5f.onrender.com/accounts
+# → {"status":"ok"}
 ```
-(Deployed from Docker Hub image built on Go 1.25, linux/amd64)
+⚠️ The first request may take up to **1** minute as Render wakes from idle.
+💡 You can check **/health** first to confirm readiness.
 
 ---
 
 ## 📘 Overview
 
 Implements a simple banking system that supports:
-
 
 | Feature | Description |
 |----------|--------------|
@@ -54,7 +50,7 @@ Implements a simple banking system that supports:
 
 ## 🧱 Project Structure
 ```
-Q2/
+SIMPLE-BANKING-SYSTEM/
 ├── cmd/
 │ └── server/ # Entry point (main.go)
 ├── internal/
@@ -68,177 +64,129 @@ Q2/
 
 ---
 
-## ⚙️ Quick Start
+## ⚙️ Quick Run
 
-### 1️⃣ Run Tests (Unit + Integration)
+You can verify the project in 3 ways:
+1️⃣ Online via **Render.com**
+2️⃣ Using the prebuilt **Docker image**
+3️⃣ Running **locally** with Go
 
+### 🌐 Option A. Test Online (Render.com)
+
+Base URL:
+🔗 https://simple-banking-system-jh5f.onrender.com
+
+Health Check:
 ```bash
+curl https://simple-banking-system-jh5f.onrender.com/health
+# → {"status":"ok"}
+```
+⚠️ The first request may take up to one minute as the Render server wakes from idle.
+💡 You can use **/health** first to confirm the API is ready.
 
+
+### 🐳 Option B. Run via Docker
+
+1️⃣ Pull and Run from Docker Hub
+```bash
+docker run --rm -p 8080:8080 docker.io/carollin/simple-banking-system:latest
+```
+2️⃣ Verify
+```bash
+curl http://localhost:8080/health
+# → {"status":"ok"}
+```
+3️⃣ (Optional) Build Locally
+```bash
+docker build -t simple-banking-system .
+docker run --rm -p 8080:8080 simple-banking-system
+```
+
+### 💻 Option C. Run Locally (No Docker)
+
+⚠️ Requires Go ≥ 1.22
+
+1️⃣ Run tests (unit + integration) under project root
+```bash
 go mod tidy
-
 go test ./... -race -v
 ```
-
-✅ Expected result:
+2️⃣ Run server
 ```bash
-=== RUN TestHTTPFlowAndPersistHook
-
---- PASS: TestHTTPFlowAndPersistHook (0.12s)
-
-=== RUN TestConcurrentTransfersAtomicity
-
---- PASS: TestConcurrentTransfersAtomicity (0.01s)
-
-PASS
-
-ok banking/internal/bank 0.3s
-
-ok banking/internal/server 0.5s
-
-ok banking/internal/storage 0.1s
-```
-  
-2️⃣ Run the Server
-
-```bash
-
 go run ./cmd/server
-
 ```
-
-Server starts at http://localhost:8080.
-  
-
-Check health:
-
+3️⃣ Check health
 ```bash
-curl localhost:8080/health
-# → "ok"
+curl http://localhost:8080/health
+# → {"status":"ok"}
 ```
+---
 
+## 📡 API Endpoints
 
-3️⃣ Example API Flow
-
-```bash
-
-# Create two accounts
-
-curl -X POST localhost:8080/accounts \
-
--H "Content-Type: application/json" \
-
--d '{"name":"Alice","balance":1000}'
-
-  
-
-curl -X POST localhost:8080/accounts \
-
--H "Content-Type: application/json" \
-
--d '{"name":"Bob","balance":500}'
-
-  
-
-# Deposit to Alice
-
-curl -X POST localhost:8080/accounts/<alice_id>/deposit \
-
--H "Content-Type: application/json" \
-
--d '{"amount":200}'
-
-  
-
-# Withdraw from Bob
-
-curl -X POST localhost:8080/accounts/<bob_id>/withdraw \
-
--H "Content-Type: application/json" \
-
--d '{"amount":100}'
-
-  
-
-# Transfer
-
-curl -X POST localhost:8080/transfer \
-
--H "Content-Type: application/json" \
-
--d '{"From":"<alice_id>","To":"<bob_id>","Amount":300}'
-
-  
-
-# View logs
-
-curl localhost:8080/accounts/<bob_id>/logs
-
-```
-
-  
-
-🧪 Test Coverage Summary
-|**Requirement**|**Status**|**Test File**|
-|---|---|---|
-|RESTful API endpoints|✅|internal/server/server_test.go|
-|Account balance cannot be negative|✅|TestCreateNegativeBalance|
-|Create account|✅|TestCreateAndListGet|
-|Deposit / Withdraw|✅|TestDepositWithdraw|
-|Transfer (atomic)|✅|TestTransfer, TestConcurrentTransfersAtomicity|
-|Transaction logs (when, amount, target)|✅|TestLogs|
-|Atomic transaction|✅|TestConcurrentTransfersAtomicity|
-|Unit tests & Integration tests|✅|All _test.go files|
-|Docker container run server|✅|Dockerfile|
-
-
-### 🚀 Quick Run from Docker Hub (for reviewers)
-
-If you only want to verify the running service without building locally,  
-just pull and run the image from Docker Hub:
-
-```bash
-docker run -p 8080:8080 carollin/q2-banking:latest
-curl localhost:8080/health
-```
-
-## **🐳 Run with Docker**
-
-Build and run the server:
-```bash
-docker build -t banking .
-docker run -p 8080:8080 banking
-```
-
-Verify:
-```bash
-curl localhost:8080/health
-```
-
-## **🧠 Technical Highlights**
-
-- **Layered architecture** (bank, server, storage)
-    
-- **Atomic transactions** with mutex for concurrent safety
-    
-- **Comprehensive tests** covering logic, HTTP, and persistence
-    
-- **JSON snapshot persistence**, easily replaceable with SQLite or Redis
-    
-- **Clean, idiomatic Go** with no external dependencies beyond stdlib
-    
+| Method | Endpoint | Description |
+|:-------|:----------|:------------|
+| **GET** | `/health` | Check service status (`{"status":"ok"}`) |
+| **POST** | `/accounts` | Create new account (`{"name":"Alice","balance":1000}`) |
+| **GET** | `/accounts` | List all accounts |
+| **GET** | `/accounts/{id}` | Retrieve single account details |
+| **POST** | `/accounts/{id}/deposit` | Deposit funds (`{"amount":200}`) |
+| **POST** | `/accounts/{id}/withdraw` | Withdraw funds (`{"amount":100}`) |
+| **POST** | `/transfer` | Transfer between accounts (`{"From":"<id>","To":"<id>","Amount":300}`) |
+| **GET** | `/accounts/{id}/logs` | View account transaction logs |
 
 ---
 
-## **✨ Quick Demo (60 seconds)**
-```bash
-docker run -p 8080:8080 <your-dockerhub-username>/banking
-curl localhost:8080/health
-```
-✅ Service ready. All requirements verified by automated tests.
+## 🧩 Suggested API Test Flow
 
+Below is a quick example sequence to verify core features once the server is running:
+
+```bash
+# 1. Create two accounts
+curl -X POST localhost:8080/accounts \
+-H "Content-Type: application/json" \
+-d '{"name":"Alice","balance":1000}'
+
+curl -X POST localhost:8080/accounts \
+-H "Content-Type: application/json" \
+-d '{"name":"Bob","balance":500}'
+
+# 2. Deposit to Alice
+curl -X POST localhost:8080/accounts/<alice_id>/deposit \
+-H "Content-Type: application/json" \
+-d '{"amount":200}'
+
+# 3. Withdraw from Bob
+curl -X POST localhost:8080/accounts/<bob_id>/withdraw \
+-H "Content-Type: application/json" \
+-d '{"amount":100}'
+
+# 4. Transfer from Alice to Bob
+curl -X POST localhost:8080/transfer \
+-H "Content-Type: application/json" \
+-d '{"From":"<alice_id>","To":"<bob_id>","Amount":300}'
+
+# 5. Check Bob's transaction logs
+curl localhost:8080/accounts/<bob_id>/logs
+```
+
+💡 Tip: Replace **<alice_id>** and **<bob_id>** with the actual IDs returned when you create the accounts.
+
+---
+
+## 🧠 Technical Highlights
+
+- **Layered Architecture** — clear separation of `bank` (business logic), `server` (HTTP API), and `storage` (persistence).  
+- **Atomic Transactions** — concurrent-safe transfers implemented using mutex locks.  
+- **Data Persistence** — in-memory state with JSON snapshot, easily replaceable with SQLite, Redis, or cloud storage.  
+- **Comprehensive Testing** — full unit and integration coverage validated via `go test -race -v`.  
+- **Stateless RESTful API** — clean endpoint design following REST principles.  
+- **Dockerized Deployment** — fully containerized for consistent CI/CD and Render deployment.  
+- **Zero External Dependencies** — uses only Go’s standard library for maximum portability.  
+
+---
 
 ### **Author**
-
   
 
 **Carol Lin (YiYun Lin)**
